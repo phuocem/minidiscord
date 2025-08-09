@@ -24,4 +24,8 @@ class LayoutController extends GetxController {
   void onClose() {
     super.onClose();
   }
+
+
+
+
 }

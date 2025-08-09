@@ -8,7 +8,7 @@ class LayoutView extends GetView<LayoutController> {
 
   @override
   Widget build(BuildContext context) {
-    final bg = const Color(0xFFF5F7FA); // Soft greyish-blue background
+    final bg = const Color(0xFFF5F7FA);
     return Scaffold(
       backgroundColor: bg,
       body: Obx(() {
@@ -50,7 +50,7 @@ class LayoutView extends GetView<LayoutController> {
             margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
             decoration: BoxDecoration(
-              color: const Color(0xFFF4F0F0), // Soft purple
+              color: const Color(0xFFF4F0F0),
               borderRadius: BorderRadius.circular(24),
               boxShadow: [
                 BoxShadow(color: Colors.black.withOpacity(0.10), blurRadius: 12, offset: const Offset(0, 6)),
@@ -108,18 +108,15 @@ class LayoutView extends GetView<LayoutController> {
     );
   }
 }
-
 class _NavItem {
   final IconData icon;
   final String label;
   final Color background;
   const _NavItem({required this.icon, required this.label, required this.background});
 }
-
 const List<_NavItem> _navItems = [
-  _NavItem(icon: Icons.home_outlined, label: 'Home', background: Color(0xFF4CAF50)), // Deep green
-  _NavItem(icon: Icons.message_outlined, label: 'Chat', background: Color(0xFF42A5F5)), // Vibrant blue
-  _NavItem(icon: Icons.video_call_outlined, label: 'Rooms', background: Color(
-      0xFFEFBE1E)), // Bright yellow
-  _NavItem(icon: Icons.person_outline, label: 'Profile', background: Color(0xFFD81B60)), // Vibrant pink
+  _NavItem(icon: Icons.home_outlined, label: 'Home', background: Color(0xFF4CAF50)),
+  _NavItem(icon: Icons.message_outlined, label: 'Chat', background: Color(0xFF42A5F5)),
+  _NavItem(icon: Icons.video_call_outlined, label: 'Rooms', background: Color(0xFFEFBE1E)),
+  _NavItem(icon: Icons.person_outline, label: 'Profile', background: Color(0xFFD81B60)),
 ];

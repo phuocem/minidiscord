@@ -1,8 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -21,7 +19,7 @@ class LoginView extends GetView<LoginController> {
           Obx(() {
             if (controller.isLoading.value) {
               return const Center(child: CircularProgressIndicator(color: Color(
-                  0xFFAA46BB))); // Shimmering silver
+                  0xFFAA46BB)));
             }
 
             return Center(
@@ -37,7 +35,7 @@ class LoginView extends GetView<LoginController> {
                         style: TextStyle(
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFAA46BB), // Shimmering silver
+                          color: Color(0xFFAA46BB),
                           shadows: [
                             Shadow(color: Colors.black38, offset: Offset(2, 2), blurRadius: 6),
                           ],
@@ -58,7 +56,7 @@ class LoginView extends GetView<LoginController> {
                                 end: Alignment.bottomRight,
                               ),
                               borderRadius: BorderRadius.circular(24),
-                              border: Border.all(color: Color(0xFFAB47BC).withOpacity(0.5)), // Rich magenta border
+                              border: Border.all(color: Color(0xFFAB47BC).withOpacity(0.5)),
                             ),
                             child: Obx(() => Column(
                               mainAxisSize: MainAxisSize.min,
@@ -118,7 +116,7 @@ class LoginView extends GetView<LoginController> {
                                     },
                                     style: ElevatedButton.styleFrom(
 
-                                      backgroundColor: Color(0xFFB761C1), // Deep cyan
+                                      backgroundColor: Color(0xFFB761C1),
                                       foregroundColor: Colors.white,
                                       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
                                       shape: RoundedRectangleBorder(
@@ -161,7 +159,7 @@ class LoginView extends GetView<LoginController> {
                                         ? 'Chưa có tài khoản? Tạo tài khoản'
                                         : 'Đã có tài khoản? Đăng nhập',
                                     style: const TextStyle(
-                                      color: Color(0xFFAA46BB), // Shimmering silver
+                                      color: Color(0xFFAA46BB),
                                       fontSize: 14,
                                     ),
                                   ),
@@ -191,11 +189,11 @@ class LoginView extends GetView<LoginController> {
       fillColor: Colors.white.withOpacity(0.9),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAB47BC)), // Rich magenta
+        borderSide: const BorderSide(color: Color(0xFFAB47BC)),
         borderRadius: BorderRadius.circular(16),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAA46BB)), // Shimmering silver
+        borderSide: const BorderSide(color: Color(0xFFAA46BB)),
         borderRadius: BorderRadius.circular(16),
       ),
     );
@@ -217,11 +215,11 @@ class LoginView extends GetView<LoginController> {
       fillColor: Colors.white.withOpacity(0.9),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAB47BC)), // Rich magenta
+        borderSide: const BorderSide(color: Color(0xFFAB47BC)),
         borderRadius: BorderRadius.circular(16),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAA46BB)), // Shimmering silver
+        borderSide: const BorderSide(color: Color(0xFFAA46BB)),
         borderRadius: BorderRadius.circular(16),
       ),
     );
