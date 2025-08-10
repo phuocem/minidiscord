@@ -27,7 +27,7 @@ class HomeController extends GetxController {
     Chat(
       name: 'Trần Phước Anh',
       avatar: '',
-      lastMessage: 'Ok cảm ơn!',
+      lastMessage: 'Ok cảm ơn! áddddddddddddddddddddddddddddfdgsjsdhbjfkgkshjkgdfsdfghsjk',
       status: 'offline',
       time: '08:45',
       unread: 1,

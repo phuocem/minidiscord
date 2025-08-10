@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'app/modules/home/controllers/home_controller.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 
@@ -21,6 +22,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  Get.put(HomeController());
 
   runApp
     (
