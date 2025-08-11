@@ -14,4 +14,15 @@ class Chat {
     required this.time,
     required this.unread,
   });
+
+  factory Chat.fromMap(Map<String, dynamic> map) {
+    return Chat(
+      name: map['name'] ?? '',
+      avatar: map['avatar'] ?? '',
+      lastMessage: map['last_message'] ?? '',
+      status: map['status'] ?? 'offline',
+      time: map['time'] ?? '',
+      unread: map['unread'] ?? 0,
+    );
+  }
 }

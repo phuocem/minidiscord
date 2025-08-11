@@ -6,6 +6,8 @@ import '../modules/Room/bindings/room_binding.dart';
 import '../modules/Room/views/room_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
 import '../modules/chat/views/chat_view.dart';
+import '../modules/detail_chat/bindings/detail_chat_binding.dart';
+import '../modules/detail_chat/views/detail_chat_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/layout/bindings/layout_binding.dart';
@@ -23,12 +25,12 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.HOME,
-      page: () =>  HomeView(),
+      page: () => HomeView(),
       binding: HomeBinding(),
       children: [
         GetPage(
           name: _Paths.HOME,
-          page: () =>  HomeView(),
+          page: () => HomeView(),
           binding: HomeBinding(),
         ),
       ],
@@ -57,6 +59,11 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.DETAIL_CHAT,
+      page: () => const DetailChatView(),
+      binding: DetailChatBinding(),
     ),
   ];
 }

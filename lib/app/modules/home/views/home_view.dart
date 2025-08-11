@@ -15,14 +15,14 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chat List'),
-        backgroundColor: colors.primary,
+        backgroundColor:const Color(0xFFE1BEE7),
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFFB2DFDB),
-              Color(0xFFE1BEE7), // Tím nhạt
+              Color(0xFFDDFAF6),
+              Color(0xFFF1DDF4), // Tím nhạt
                // Xanh diệp lục nhạt
             ],
             begin: Alignment.topLeft,
@@ -37,8 +37,7 @@ class HomeView extends GetView<HomeController> {
               final chat = controller.chats[index];
               final bool isOnline = chat.status == 'online';
 
-              // 🌟 Màu hoạt động (xanh nhẹ) và màu xám
-              final activeColor = Colors.greenAccent;
+              const activeColor = Color(0xFF00FF36);
               final inactiveColor = colors.onSurfaceVariant;
               final statusColor = isOnline ? activeColor : inactiveColor;
 
@@ -75,13 +74,13 @@ class HomeView extends GetView<HomeController> {
                       ),
                     ),
 
-                    const SizedBox(width: 11),
+                    const SizedBox(width: 0),
                     // Chat bubble
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 14,
-                          vertical: 6, // Giảm từ 8 xuống 6
+                          vertical: 12, // Giảm từ 8 xuống 6
                         ),
                         decoration: BoxDecoration(
                           color: colors.surface,
@@ -121,7 +120,6 @@ class HomeView extends GetView<HomeController> {
                             ),
                             const SizedBox(height: 4), // Giảm từ 10 xuống 4
 
-                            // Tin nhắn cuối + unread
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -140,8 +138,8 @@ class HomeView extends GetView<HomeController> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 4),
                                     decoration: BoxDecoration(
-                                      color: colors.error,
-                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Text(
                                       chat.unread.toString(),

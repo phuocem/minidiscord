@@ -24,8 +24,12 @@ class LoginController extends GetxController {
       '', '',
       titleText: Row(
         children: [
-          Icon(icon, color: Colors.white), const SizedBox(width: 8),
-          Expanded(child: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+          Icon(icon, color: Colors.white),
+          const SizedBox(width: 8),
+          Expanded(
+              child: Text(title,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold))),
         ],
       ),
       messageText: Text(message, style: const TextStyle(color: Colors.white)),
@@ -41,13 +45,29 @@ class LoginController extends GetxController {
   Future<void> loginUser(String email, String password) async {
     isLoading.value = true;
     try {
-      final res = await supabase.auth.signInWithPassword(email: email, password: password);
-      res.user != null ? NavigateToHome() : showToast(
-          title: 'Lỗi', message: 'Sai email hoặc mật khẩu', icon: Icons.error, color: Colors.red);
+      final res = await supabase.auth.signInWithPassword(
+          email: email, password: password);
+      if (res.user != null) {
+        navigateToHome();
+      } else {
+        showToast(
+            title: 'Lỗi',
+            message: 'Sai email hoặc mật khẩu',
+            icon: Icons.error,
+            color: Colors.red);
+      }
     } on AuthException catch (e) {
-      showToast(title: 'Lỗi đăng nhập', message: e.message, icon: Icons.warning, color: Colors.red);
+      showToast(
+          title: 'Lỗi đăng nhập',
+          message: e.message,
+          icon: Icons.warning,
+          color: Colors.red);
     } catch (e) {
-      showToast(title: 'Lỗi hệ thống', message: '$e', icon: Icons.bug_report, color: Colors.red);
+      showToast(
+          title: 'Lỗi hệ thống',
+          message: '$e',
+          icon: Icons.bug_report,
+          color: Colors.red);
     } finally {
       isLoading.value = false;
     }
@@ -60,15 +80,27 @@ class LoginController extends GetxController {
     required String confirmPassword,
   }) async {
     if ([email, username, password, confirmPassword].any((e) => e.isEmpty)) {
-      showToast(title: 'Thiếu thông tin', message: 'Điền đầy đủ các trường.', icon: Icons.info, color: Colors.orange);
+      showToast(
+          title: 'Thiếu thông tin',
+          message: 'Điền đầy đủ các trường.',
+          icon: Icons.info,
+          color: Colors.orange);
       return;
     }
     if (password.length < 6) {
-      showToast(title: 'Mật khẩu yếu', message: 'Tối thiểu 6 ký tự.', icon: Icons.lock_outline, color: Colors.red);
+      showToast(
+          title: 'Mật khẩu yếu',
+          message: 'Tối thiểu 6 ký tự.',
+          icon: Icons.lock_outline,
+          color: Colors.red);
       return;
     }
     if (password != confirmPassword) {
-      showToast(title: 'Xác nhận sai', message: 'Mật khẩu không khớp.', icon: Icons.warning, color: Colors.red);
+      showToast(
+          title: 'Xác nhận sai',
+          message: 'Mật khẩu không khớp.',
+          icon: Icons.warning,
+          color: Colors.red);
       return;
     }
 
@@ -77,16 +109,34 @@ class LoginController extends GetxController {
       final res = await supabase.auth.signUp(
         email: email,
         password: password,
-        data: { 'display_name': username },
+        data: {'display_name': username},
       );
-      res.user != null
-          ? showToast(title: 'Thành công', message: 'Tạo tài khoản thành công. Vui lòng đăng nhập.', icon: Icons.check_circle, color: Colors.green)
-          : showToast(title: 'Lỗi', message: 'Không thể tạo tài khoản.', icon: Icons.error_outline, color: Colors.red);
-      isLoginForm.value = true;
+      if (res.user != null) {
+        showToast(
+            title: 'Thành công',
+            message: 'Tạo tài khoản thành công. Vui lòng đăng nhập.',
+            icon: Icons.check_circle,
+            color: Colors.green);
+        isLoginForm.value = true;
+      } else {
+        showToast(
+            title: 'Lỗi',
+            message: 'Không thể tạo tài khoản.',
+            icon: Icons.error_outline,
+            color: Colors.red);
+      }
     } on AuthException catch (e) {
-      showToast(title: 'Lỗi đăng ký', message: e.message, icon: Icons.warning_amber, color: Colors.red);
+      showToast(
+          title: 'Lỗi đăng ký',
+          message: e.message,
+          icon: Icons.warning_amber,
+          color: Colors.red);
     } catch (e) {
-      showToast(title: 'Lỗi hệ thống', message: '$e', icon: Icons.bug_report, color: Colors.red);
+      showToast(
+          title: 'Lỗi hệ thống',
+          message: '$e',
+          icon: Icons.bug_report,
+          color: Colors.red);
     } finally {
       isLoading.value = false;
     }
@@ -99,6 +149,7 @@ class LoginController extends GetxController {
 
     try {
       final google = GoogleSignIn(clientId: iosClientId, serverClientId: webClientId);
+      await google.signOut(); // Force account selection
       final user = await google.signIn();
       final auth = await user?.authentication;
 
@@ -106,24 +157,39 @@ class LoginController extends GetxController {
         throw 'Không lấy được token từ Google';
       }
 
-      await supabase.auth.signInWithIdToken(
+      final response = await supabase.auth.signInWithIdToken(
         provider: OAuthProvider.google,
         idToken: auth!.idToken!,
         accessToken: auth.accessToken!,
       );
 
-      NavigateToHome();
+      if (response.user != null) {
+        navigateToHome();
+      } else {
+        throw 'Không thể xác thực người dùng với Supabase';
+      }
     } catch (e) {
-      showToast(title: 'Lỗi Google Sign-In', message: '$e', icon: Icons.g_mobiledata, color: Colors.red);
+      showToast(
+        title: 'Lỗi Google Sign-In',
+        message: '$e',
+        icon: Icons.g_mobiledata,
+        color: Colors.red,
+      );
     } finally {
       isLoading.value = false;
     }
   }
 
-  void NavigateToHome() {
+  void navigateToHome() {
     final user = supabase.auth.currentUser;
-    user != null
-        ? Get.offAllNamed('/layout')
-        : showToast(title: 'Lỗi', message: 'Không thể xác thực người dùng', icon: Icons.warning, color: Colors.red);
+    if (user != null) {
+      Get.offAllNamed('/layout');
+    } else {
+      showToast(
+          title: 'Lỗi',
+          message: 'Không thể xác thực người dùng',
+          icon: Icons.warning,
+          color: Colors.red);
+    }
   }
 }
