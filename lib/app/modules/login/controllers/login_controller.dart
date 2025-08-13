@@ -109,9 +109,16 @@ class LoginController extends GetxController {
       final res = await supabase.auth.signUp(
         email: email,
         password: password,
-        data: {'display_name': username},
+        data: {'name': username},
       );
       if (res.user != null) {
+        final profileData = {
+          'id': res.user!.id,
+          'email': email,
+          'username': username,
+          'created_at': DateTime.now().toIso8601String(),
+        };
+        await supabase.from('profiles').upsert(profileData);
         showToast(
             title: 'Thành công',
             message: 'Tạo tài khoản thành công. Vui lòng đăng nhập.',
@@ -149,7 +156,7 @@ class LoginController extends GetxController {
 
     try {
       final google = GoogleSignIn(clientId: iosClientId, serverClientId: webClientId);
-      await google.signOut(); // Force account selection
+      await google.signOut();
       final user = await google.signIn();
       final auth = await user?.authentication;
 
@@ -164,6 +171,47 @@ class LoginController extends GetxController {
       );
 
       if (response.user != null) {
+        // Kiểm tra xem profile đã tồn tại chưa
+        final existingProfile = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', response.user!.id)
+            .maybeSingle();
+
+        String username;
+        String? avatarUrl;
+
+        if (existingProfile != null) {
+          // Nếu profile đã tồn tại, giữ username và avatar_url hiện tại
+          username = existingProfile['username'] ?? user?.displayName ?? user?.email?.split('@')[0] ?? 'User_${response.user!.id.substring(0, 8)}';
+          avatarUrl = existingProfile['avatar_url'];
+        } else {
+          // Nếu profile chưa tồn tại, sử dụng displayName và photoUrl từ Google
+          username = user?.displayName ?? user?.email?.split('@')[0] ?? 'User_${response.user!.id.substring(0, 8)}';
+          avatarUrl = user?.photoUrl;
+        }
+
+        // Cập nhật user_metadata trong auth
+        await supabase.auth.updateUser(
+          UserAttributes(
+            data: {
+              'name': username,
+              'avatar_url': avatarUrl,
+            },
+          ),
+        );
+
+        // Upsert profile
+        final upsertData = {
+          'id': response.user!.id,
+          'email': user?.email,
+          'username': username,
+          'avatar_url': avatarUrl,
+          'created_at': DateTime.now().toIso8601String(),
+        };
+        final upsertResponse = await supabase.from('profiles').upsert(upsertData).select();
+        print('Upsert response: $upsertResponse');
+
         navigateToHome();
       } else {
         throw 'Không thể xác thực người dùng với Supabase';

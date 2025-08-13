@@ -118,5 +118,5 @@ const List<_NavItem> _navItems = [
   _NavItem(icon: Icons.home_outlined, label: 'Home', background: Color(0xFF4CAF50)),
   _NavItem(icon: Icons.message_outlined, label: 'Chat', background: Color(0xFF42A5F5)),
   _NavItem(icon: Icons.video_call_outlined, label: 'Rooms', background: Color(0xFFEFBE1E)),
-  _NavItem(icon: Icons.person_outline, label: 'Profile', background: Color(0xFFD81B60)),
+  _NavItem(icon: Icons.settings, label: 'Setting', background: Color(0xFFD81B60)),
 ];

@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -8,219 +10,149 @@ class LoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.network(
-            'https://cdn.leonardo.ai/users/1b016cca-4848-450c-9cef-409b9e89f1f3/generations/3a6f52fd-1458-41ea-82b7-4fe0a8c6906e/segments/1:4:1/Lucid_Origin_a_cinematic_photo_of_A_large_bright_futuristic_vi_0.jpg',
-            fit: BoxFit.cover,
-          ),
-          Obx(() {
-            if (controller.isLoading.value) {
-              return const Center(child: CircularProgressIndicator(color: Color(
-                  0xFFAA46BB)));
-            }
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
+    // Define a modern color palette
+    const primaryColor = Color(0xFF6200EA); // Deep purple
+    const secondaryColor = Color(0xFF03DAC6); // Teal accent
+    const backgroundColor = Color(0xFFF5F7FA); // Light grey for light mode
+    const darkBackgroundColor = Color(0xFF121212); // Dark grey for dark mode
+
+    return Scaffold(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              primaryColor.withOpacity(0.9),
+              secondaryColor.withOpacity(0.7),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: const [0.0, 1.0],
+          ),
+        ),
+        child: SafeArea(
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 90,
+                      height: 90,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white.withOpacity(0.15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 8,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    const CircularProgressIndicator(
+                      color: secondaryColor,
+                      strokeWidth: 5,
+                    ),
+                  ],
+                ).animate().fadeIn(duration: 400.ms, curve: Curves.easeInOut),
+              );
+            }
             return Center(
               child: SingleChildScrollView(
-                child: AnimatedOpacity(
-                  opacity: 1.0,
-                  duration: const Duration(milliseconds: 500),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'Xin chào đến với ...',
-                        style: TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFAA46BB),
-                          shadows: [
-                            Shadow(color: Colors.black38, offset: Offset(2, 2), blurRadius: 6),
-                          ],
-                        ),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Title
+                    Text(
+                      'Xin chào!',
+                      style: TextStyle(
+                        fontSize: 34,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        fontFamily: 'Poppins',
+                        letterSpacing: 0.8,
                       ),
-                      const SizedBox(height: 24),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                          child: Container(
-                            width: 500,
-                            padding: const EdgeInsets.all(32),
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xFFFFFFFF).withOpacity(0.25), Color(0xFFE0F7FA).withOpacity(0.35)],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                              ),
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(color: Color(0xFFAB47BC).withOpacity(0.5)),
+                    ).animate().fadeIn(duration: 500.ms, delay: 100.ms).slideY(
+                      begin: -0.3,
+                      end: 0,
+                      curve: Curves.easeOutCubic,
+                    ),
+                    const SizedBox(height: 12),
+                    // Subtitle
+                    Text(
+                      'Khám phá thế giới với chúng tôi',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white.withOpacity(0.85),
+                        fontFamily: 'Poppins',
+                      ),
+                    ).animate().fadeIn(duration: 500.ms, delay: 200.ms).slideY(
+                      begin: -0.2,
+                      end: 0,
+                      curve: Curves.easeOutCubic,
+                    ),
+                    const SizedBox(height: 36),
+                    // Login Section
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Google Sign-In Button
+                        ElevatedButton.icon(
+                          onPressed: controller.nativeGoogleSignIn,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: primaryColor,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 28,
                             ),
-                            child: Obx(() => Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                if (!controller.isLoginForm.value)
-                                  Column(
-                                    children: [
-                                      TextFormField(
-                                        onChanged: (value) => controller.username.value = value,
-                                        style: const TextStyle(color: Color(0xFF212121)),
-                                        decoration: _inputDecoration('Tên người dùng', Icons.person),
-                                      ),
-                                      const SizedBox(height: 16),
-                                    ],
-                                  ),
-                                TextFormField(
-                                  onChanged: (value) => controller.email.value = value,
-                                  style: const TextStyle(color: Color(0xFF212121)),
-                                  decoration: _inputDecoration('Email', Icons.email),
-                                ),
-                                const SizedBox(height: 16),
-                                TextFormField(
-                                  obscureText: !controller.isPasswordVisible.value,
-                                  onChanged: (value) => controller.password.value = value,
-                                  style: const TextStyle(color: Color(0xFF212121)),
-                                  decoration: _passwordInputDecoration(),
-                                ),
-
-                                if (!controller.isLoginForm.value) ...[
-                                  const SizedBox(height: 16),
-                                  TextFormField(
-                                    obscureText: !controller.isPasswordVisible.value,
-                                    onChanged: (value) => controller.confirmPassword.value = value,
-                                    style: const TextStyle(color: Color(0xFF212121)),
-                                    decoration: _inputDecoration('Xác nhận mật khẩu', Icons.lock),
-                                  ),
-                                ],
-
-                                const SizedBox(height: 24),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (controller.isLoginForm.value) {
-                                        controller.loginUser(
-                                          controller.email.value,
-                                          controller.password.value,
-                                        );
-                                      } else {
-                                        controller.registerUser(
-                                          email: controller.email.value,
-                                          password: controller.password.value,
-                                          confirmPassword: controller.confirmPassword.value,
-                                          username: controller.username.value,
-                                        );
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-
-                                      backgroundColor: Color(0xFFB761C1),
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(32),
-                                      ),
-                                      elevation: 8,
-                                    ),
-                                    child: Text(
-                                      controller.isLoginForm.value ? 'Đăng nhập' : 'Tạo tài khoản',
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: controller.nativeGoogleSignIn,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    foregroundColor: const Color(0xFFAA46BB),
-                                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(32),
-                                      side: const BorderSide(color: Color(0xFFAA46BB)),
-                                    ),
-                                    elevation: 4,
-                                  ),
-                                  child: const Text(
-                                    'Đăng nhập với Google',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xFFAA46BB),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                GestureDetector(
-                                  onTap: controller.isLoginForm.toggle,
-                                  child: Text(
-                                    controller.isLoginForm.value
-                                        ? 'Chưa có tài khoản? Tạo tài khoản'
-                                        : 'Đã có tài khoản? Đăng nhập',
-                                    style: const TextStyle(
-                                      color: Color(0xFFAA46BB),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              side: BorderSide(
+                                color: primaryColor.withOpacity(0.7),
+                                width: 1,
+                              ),
+                            ),
+                            elevation: 6,
+                            minimumSize: const Size(220, 56),
                           ),
+                          icon: Image.network(
+                            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png',
+                            height: 24,
+                            errorBuilder: (context, error, stackTrace) => const Icon(
+                              Icons.g_mobiledata_rounded,
+                              size: 24,
+                              color: primaryColor,
+                            ),
+                          ),
+                          label: const Text(
+                            'Đăng nhập với Google',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Poppins',
+                              color: primaryColor,
+                            ),
+                          ),
+                        ).animate().fadeIn(duration: 400.ms, delay: 400.ms).slideX(
+                          begin: 0.2,
+                          end: 0,
+                          curve: Curves.easeOutCubic,
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             );
           }),
-        ],
-      ),
-    );
-  }
-
-  InputDecoration _inputDecoration(String label, IconData icon) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: Color(0xFF212121)),
-      prefixIcon: Icon(icon, color: Color(0xFF212121)),
-      filled: true,
-      fillColor: Colors.white.withOpacity(0.9),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAB47BC)),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAA46BB)),
-        borderRadius: BorderRadius.circular(16),
-      ),
-    );
-  }
-
-  InputDecoration _passwordInputDecoration() {
-    return InputDecoration(
-      labelText: 'Mật khẩu',
-      labelStyle: const TextStyle(color: Color(0xFF212121)),
-      prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF212121)),
-      suffixIcon: IconButton(
-        icon: Icon(
-          controller.isPasswordVisible.value ? Icons.visibility : Icons.visibility_off,
-          color: Color(0xFF212121),
         ),
-        onPressed: () => controller.isPasswordVisible.toggle(),
-      ),
-      filled: true,
-      fillColor: Colors.white.withOpacity(0.9),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAB47BC)),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFAA46BB)),
-        borderRadius: BorderRadius.circular(16),
       ),
     );
   }

@@ -23,7 +23,7 @@ class HomeView extends GetView<HomeController> {
             colors: [
               Color(0xFFDDFAF6),
               Color(0xFFF1DDF4), // Tím nhạt
-               // Xanh diệp lục nhạt
+              // Xanh diệp lục nhạt
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

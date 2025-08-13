@@ -1,8 +1,10 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 class ProfileModel {
-  final String id;       // UUID user (trùng với auth.users.id)
-  final String? email;   // Email user
-  final String? username; // Tên hiển thị (ở bảng là "username", không phải "display_name")
-  final String? avatarUrl; // Link ảnh đại diện
+  final String id;
+  final String? email;
+  final String? username;
+  final String? avatarUrl;
   final DateTime? createdAt;
 
   ProfileModel({
@@ -13,31 +15,28 @@ class ProfileModel {
     this.createdAt,
   });
 
-  // Tạo từ bản ghi Supabase (map từ bảng profiles)
   factory ProfileModel.fromMap(Map<String, dynamic> map) {
     return ProfileModel(
       id: map['id'] ?? '',
       email: map['email'],
-      username: map['username'],          // Trùng tên cột DB
+      username: map['username'],
       avatarUrl: map['avatar_url'],
-      createdAt:
-      map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
+      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
     );
   }
 
-  // Tạo từ Supabase Auth User (đối tượng user trả về supabase.auth.currentUser)
-  factory ProfileModel.fromAuthUser(dynamic user) {
+  factory ProfileModel.fromAuthUser(User user) {
     return ProfileModel(
       id: user.id,
       email: user.email,
-      // createdAt ở user dạng String ISO8601 hoặc DateTime?
+      username: user.userMetadata?['name'],
+      avatarUrl: user.userMetadata?['avatar_url'],
       createdAt: user.createdAt is String
           ? DateTime.tryParse(user.createdAt)
           : (user.createdAt as DateTime?),
     );
   }
 
-  // Chuyển sang map để gửi lên Supabase (thường dùng khi insert/update)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -46,5 +45,21 @@ class ProfileModel {
       'avatar_url': avatarUrl,
       'created_at': createdAt?.toIso8601String(),
     };
+  }
+
+  ProfileModel copyWith({
+    String? id,
+    String? email,
+    String? username,
+    String? avatarUrl,
+    DateTime? createdAt,
+  }) {
+    return ProfileModel(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+      createdAt: createdAt ?? this.createdAt,
+    );
   }
 }

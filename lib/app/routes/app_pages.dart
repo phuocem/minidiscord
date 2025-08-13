@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../modules/Profile/bindings/profile_binding.dart';
-import '../modules/Profile/views/profile_view.dart';
+import '../modules/Profile/bindings/setting_binding.dart';
+import '../modules/Profile/views/setting_view.dart';
 import '../modules/Room/bindings/room_binding.dart';
 import '../modules/Room/views/room_view.dart';
 import '../modules/chat/bindings/chat_binding.dart';
@@ -56,8 +56,8 @@ class AppPages {
       binding: RoomBinding(),
     ),
     GetPage(
-      name: _Paths.PROFILE,
-      page: () => const ProfileView(),
+      name: _Paths.Setting,
+      page: () => const SettingView(),
       binding: ProfileBinding(),
     ),
     GetPage(

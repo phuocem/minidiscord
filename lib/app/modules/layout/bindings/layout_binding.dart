@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:minidiscord/app/modules/Profile/controllers/profile_controller.dart';
-import 'package:minidiscord/app/modules/Profile/views/profile_view.dart';
+import 'package:minidiscord/app/modules/Profile/controllers/setting_controller.dart';
+import 'package:minidiscord/app/modules/Profile/views/setting_view.dart';
 import 'package:minidiscord/app/modules/Room/controllers/room_controller.dart';
 import 'package:minidiscord/app/modules/Room/views/room_view.dart';
 import 'package:minidiscord/app/modules/chat/controllers/chat_controller.dart';
@@ -18,12 +18,12 @@ class LayoutBinding extends Bindings {
         HomeView(),
         ChatView(),
         RoomView(),
-        ProfileView(),
+        SettingView(),
       ]),
     );
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<ChatController>(() => ChatController());
     Get.lazyPut<RoomController>(() => RoomController());
-    Get.lazyPut<ProfileController>(() => ProfileController());
+    Get.lazyPut<SettingController>(() => SettingController());
   }
 }
