@@ -6,7 +6,7 @@ class HomeController extends GetxController {
   final supabase = Supabase.instance.client;
 
   /// Danh sách các cuộc hội thoại
-  final chats = <Chat>[].obs;
+  final chats = <chatsModel>[].obs;
 
   /// ID của user hiện tại (nếu đã đăng nhập)
   String? currentUserId;
@@ -38,7 +38,7 @@ class HomeController extends GetxController {
           .or('sender_id.eq.$currentUserId,receiver_id.eq.$currentUserId')
           .order('created_at', ascending: false);
 
-      final Map<String, Chat> chatMap = {};
+      final Map<String, chatsModel> chatMap = {};
 
       for (var msg in response) {
         final bool isSender = msg['sender_id'] == currentUserId;
@@ -48,13 +48,11 @@ class HomeController extends GetxController {
         // Chỉ lưu cuộc trò chuyện mới nhất với mỗi user
         chatMap.putIfAbsent(
           otherUserId,
-              () => Chat(
-            name: userData['username'] ?? 'Người dùng',
-            avatar: userData['avatar_url'] ?? '',
-            lastMessage: msg['content'] ?? '',
-            status: 'offline', // sau này có thể lấy từ Realtime presence
-            time: msg['created_at'].toString().substring(11, 16),
-            unread: 0,
+              () => chatsModel(
+            id: otherUserId,
+            name: userData['username'] ?? 'Unknown',
+            isGroup: false,
+            createdAt: DateTime.parse(msg['created_at']),
           ),
         );
       }

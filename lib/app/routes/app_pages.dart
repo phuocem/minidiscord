@@ -57,7 +57,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.Setting,
-      page: () => const SettingView(),
+      page: () =>  SettingView(),
       binding: ProfileBinding(),
     ),
     GetPage(

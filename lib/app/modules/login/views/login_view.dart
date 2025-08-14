@@ -13,10 +13,10 @@ class LoginView extends GetView<LoginController> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     // Define a modern color palette
-    const primaryColor = Color(0xFF6200EA); // Deep purple
-    const secondaryColor = Color(0xFF03DAC6); // Teal accent
-    const backgroundColor = Color(0xFFF5F7FA); // Light grey for light mode
-    const darkBackgroundColor = Color(0xFF121212); // Dark grey for dark mode
+    const primaryColor = Color(0xFF6200EA);
+    const secondaryColor = Color(0xFF03DAC6);
+    const backgroundColor = Color(0xFFF5F7FA);
+    const darkBackgroundColor = Color(0xFF121212);
 
     return Scaffold(
       body: Container(
@@ -39,15 +39,15 @@ class LoginView extends GetView<LoginController> {
                   alignment: Alignment.center,
                   children: [
                     Container(
-                      width: 90,
-                      height: 90,
+                      width: 65,
+                      height: 65,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.15),
+                        color: Colors.white.withOpacity(0.0),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
-                            blurRadius: 8,
+                            blurRadius: 0,
                             spreadRadius: 2,
                           ),
                         ],
@@ -85,7 +85,7 @@ class LoginView extends GetView<LoginController> {
                     const SizedBox(height: 12),
                     // Subtitle
                     Text(
-                      'Khám phá thế giới với chúng tôi',
+                      'Chưa Ngỉ Ra',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
@@ -122,21 +122,22 @@ class LoginView extends GetView<LoginController> {
                             elevation: 6,
                             minimumSize: const Size(220, 56),
                           ),
-                          icon: Image.network(
-                            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png',
-                            height: 24,
-                            errorBuilder: (context, error, stackTrace) => const Icon(
-                              Icons.g_mobiledata_rounded,
-                              size: 24,
-                              color: primaryColor,
-                            ),
-                          ),
+
                           label: const Text(
                             'Đăng nhập với Google',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               fontFamily: 'Poppins',
+                              color: primaryColor,
+                            ),
+                          ),
+                          icon: Image.network(
+                            'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png',
+                            height: 24,
+                            errorBuilder: (context, error, stackTrace) => const Icon(
+                              Icons.g_mobiledata_rounded,
+                              size: 24,
                               color: primaryColor,
                             ),
                           ),

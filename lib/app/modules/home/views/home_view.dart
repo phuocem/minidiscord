@@ -35,11 +35,9 @@ class HomeView extends GetView<HomeController> {
             itemCount: controller.chats.length,
             itemBuilder: (context, index) {
               final chat = controller.chats[index];
-              final bool isOnline = chat.status == 'online';
 
               const activeColor = Color(0xFF00FF36);
               final inactiveColor = colors.onSurfaceVariant;
-              final statusColor = isOnline ? activeColor : inactiveColor;
 
               return Container(
                 height: _rowHeight,
@@ -52,7 +50,6 @@ class HomeView extends GetView<HomeController> {
                       width: _avatarSize,
                       height: _rowHeight,
                       child: Center(
-                        child: _buildAvatar(chat, statusColor, colors),
                       ),
                     ),
 
@@ -67,7 +64,6 @@ class HomeView extends GetView<HomeController> {
                             'assets/lightning.png',
                             width: _lightningSize,
                             height: _lightningSize,
-                            color: statusColor,
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -110,12 +106,6 @@ class HomeView extends GetView<HomeController> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                Text(
-                                  chat.time,
-                                  style: theme.textTheme.bodySmall?.copyWith(
-                                    color: colors.onSurfaceVariant,
-                                  ),
-                                ),
                               ],
                             ),
                             const SizedBox(height: 4), // Giảm từ 10 xuống 4
@@ -125,7 +115,7 @@ class HomeView extends GetView<HomeController> {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    chat.lastMessage,
+                                    chat.createdAt.toLocal().toString().substring(0, 16),
                                     style: theme.textTheme.bodyMedium?.copyWith(
                                       color: colors.onSurfaceVariant,
                                     ),
@@ -133,21 +123,8 @@ class HomeView extends GetView<HomeController> {
                                     maxLines: 1,
                                   ),
                                 ),
-                                if (chat.unread > 0)
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    child: Text(
-                                      chat.unread.toString(),
-                                      style: theme.textTheme.bodySmall?.copyWith(
-                                        color: colors.onError,
-                                      ),
-                                    ),
-                                  ),
+
+
                               ],
                             ),
                           ],
