@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
+import 'package:minidiscord/app/modules/makeFriend/controllers/makeFriend_controller.dart';
 
 import '../modules/Profile/bindings/setting_binding.dart';
 import '../modules/Profile/views/setting_view.dart';
 import '../modules/Room/bindings/room_binding.dart';
 import '../modules/Room/views/room_view.dart';
-import '../modules/chat/bindings/chat_binding.dart';
-import '../modules/chat/views/chat_view.dart';
+
 import '../modules/detail_chat/bindings/detail_chat_binding.dart';
 import '../modules/detail_chat/views/detail_chat_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -14,6 +14,8 @@ import '../modules/layout/bindings/layout_binding.dart';
 import '../modules/layout/views/layout_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/makeFriend/bindings/makeFriend_binding.dart';
+import '../modules/makeFriend/views/makeFriend_view.dart';
 
 part 'app_routes.dart';
 
@@ -47,8 +49,8 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CHAT,
-      page: () => const ChatView(),
-      binding: ChatBinding(),
+      page: () =>  MakeFriendView(),
+      binding: makeFriendBinding(),
     ),
     GetPage(
       name: _Paths.ROOM,
@@ -62,7 +64,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_CHAT,
-      page: () => const DetailChatView(),
+      page: () =>  DetailChatView(),
       binding: DetailChatBinding(),
     ),
   ];

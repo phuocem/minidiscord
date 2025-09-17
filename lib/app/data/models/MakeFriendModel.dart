@@ -1,31 +1,37 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-class ProfileModel {
+
+class MakeFriendModel {
   final String id;
   final String? email;
   final String? username;
   final String? avatarUrl;
+  final String status; // none | requested | pending | friend
   final DateTime? createdAt;
 
-  ProfileModel({
+  MakeFriendModel({
     required this.id,
     this.email,
     this.username,
     this.avatarUrl,
+    this.status = 'none',
     this.createdAt,
   });
 
-  factory ProfileModel.fromMap(Map<String, dynamic> map) {
-    return ProfileModel(
+  factory MakeFriendModel.fromMap(Map<String, dynamic> map) {
+    return MakeFriendModel(
       id: map['id'] ?? '',
       email: map['email'],
       username: map['username'],
       avatarUrl: map['avatar_url'],
-      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
+      status: map['status'] ?? 'none',
+      createdAt: map['created_at'] != null
+          ? DateTime.tryParse(map['created_at'])
+          : null,
     );
   }
 
-  factory ProfileModel.fromAuthUser(User user) {
-    return ProfileModel(
+  factory MakeFriendModel.fromAuthUser(User user) {
+    return MakeFriendModel(
       id: user.id,
       email: user.email,
       username: user.userMetadata?['name'],
@@ -42,22 +48,25 @@ class ProfileModel {
       'email': email,
       'username': username,
       'avatar_url': avatarUrl,
+      'status': status,
       'created_at': createdAt?.toIso8601String(),
     };
   }
 
-  ProfileModel copyWith({
+  MakeFriendModel copyWith({
     String? id,
     String? email,
     String? username,
     String? avatarUrl,
+    String? status,
     DateTime? createdAt,
   }) {
-    return ProfileModel(
+    return MakeFriendModel(
       id: id ?? this.id,
       email: email ?? this.email,
       username: username ?? this.username,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
     );
   }
