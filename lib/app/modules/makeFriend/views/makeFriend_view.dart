@@ -214,8 +214,7 @@ class MakeFriendView extends StatelessWidget {
             f,
             IconButton(
               icon: const Icon(Icons.message_outlined,color: Colors.blue),
-              onPressed: () => controller.navigateDetailMes(f.id)
-
+              onPressed: () =>{}
             ),
           ))
               .toList(),
@@ -223,8 +222,6 @@ class MakeFriendView extends StatelessWidget {
       }),
     );
   }
-
-
   Widget _buildUserCard(ProfileModel user, Widget action) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 6),
