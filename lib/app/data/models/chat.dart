@@ -1,47 +1,64 @@
-class ChatModlel {
+class ChatModel {
   final String id;
   final String senderId;
-  final double underChat;
-  final List<String> messenger;
-  final DateTime createdAt;
+  final String receiverId;
+  final String message;
+  final String type;
+  final String status;
+  final DateTime? createdAt;
 
-  ChatModlel({
+  ChatModel({
     required this.id,
     required this.senderId,
-        required this.underChat,
-    required this.messenger,
-    required this.createdAt,
+    required this.receiverId,
+    required this.message,
+    this.type = 'text',
+    this.status = 'sent',
+    this.createdAt,
   });
-  factory ChatModlel.fromMap(Map<String, dynamic> map) {
-    return ChatModlel(
-      id: map['id'] as String,
-      senderId: map['sender_id'] as String,
-          underChat: map['under_chat'] as double,
-      messenger: List<String>.from(map['messenger'] as List<dynamic>),
-      createdAt: DateTime.parse(map['created_at'] as String),
+
+  factory ChatModel.fromMap(Map<String, dynamic> map) {
+    return ChatModel(
+      id: map['id'] ?? '',
+      senderId: map['sender_id'] ?? '',
+      receiverId: map['receiver_id'] ?? '',
+      message: map['message'] ?? '',
+      type: map['type'] ?? 'text',
+      status: map['status'] ?? 'sent',
+      createdAt: map['created_at'] != null
+          ? DateTime.tryParse(map['created_at'])
+          : null,
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'sender_id': senderId,
-          'under_chat': underChat,
-      'messenger': messenger,
-      'created_at': createdAt.toIso8601String(),
+      'receiver_id': receiverId,
+      'message': message,
+      'type': type,
+      'status': status,
+      'created_at': createdAt?.toIso8601String(),
     };
   }
-  ChatModlel copyWith({
+
+  ChatModel copyWith({
     String? id,
     String? senderId,
-        double? underChat,
-    List<String>? messenger,
+    String? receiverId,
+    String? message,
+    String? type,
+    String? status,
     DateTime? createdAt,
   }) {
-    return ChatModlel(
+    return ChatModel(
       id: id ?? this.id,
       senderId: senderId ?? this.senderId,
-          underChat: underChat ?? this.underChat,
-      messenger: messenger ?? this.messenger,
+      receiverId: receiverId ?? this.receiverId,
+      message: message ?? this.message,
+      type: type ?? this.type,
+      status: status ?? this.status,
       createdAt: createdAt ?? this.createdAt,
     );
   }
