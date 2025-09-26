@@ -10,7 +10,7 @@ class HomeController extends GetxController {
     super.onInit();
   }
   void loadChatRooms() {
-
+  Get.offAllNamed('/detail-chat');
   }
 
 

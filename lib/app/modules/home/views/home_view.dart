@@ -28,7 +28,39 @@ class HomeView extends GetView<HomeController> {
             end: Alignment.bottomRight,
           ),
         ),
-        
+        // child: Obx(() {
+        //   if (controller.chatRooms.isEmpty) {
+        //     return const Center(child: Text("No chats yet"));
+        //   }
+        //   return ListView.builder(
+        //     itemCount: controller.chatRooms.length,
+        //     itemBuilder: (context, index) {
+        //       final room = controller.chatRooms[index];
+        //       return ListTile(
+        //         leading: _buildAvatar(colors),
+        //         title: Text(
+        //           room.name ?? "Private Chat",
+        //           style: theme.textTheme.bodyLarge?.copyWith(
+        //             fontWeight: FontWeight.bold,
+        //           ),
+        //         ),
+        //         subtitle: Text(
+        //           room.lastMessage ?? "",
+        //           maxLines: 1,
+        //           overflow: TextOverflow.ellipsis,
+        //           style: theme.textTheme.bodyMedium,
+        //         ),
+        //         trailing: Text(
+        //           room.lastMessageAt != null
+        //               ? _formatTime(room.lastMessageAt!)
+        //               : "",
+        //           style: theme.textTheme.bodySmall,
+        //         ),
+        //         onTap: () {controller.loadChatRooms();}
+        //       );
+        //     },
+        //   );
+        // }),
       ),
     );
   }
