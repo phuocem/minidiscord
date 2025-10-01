@@ -22,8 +22,8 @@ class RoomView extends GetView<RoomController> {
             children: [
               Text(
                 controller.cameraGranted.value
-                    ? "✅ Đã có quyền camera"
-                    : "❌ Chưa có quyền camera",
+                    ? "Đã có quyền camera"
+                    : "Chưa có quyền camera",
                 style: const TextStyle(fontSize: 20),
               ),
               const SizedBox(height: 20),
@@ -34,7 +34,9 @@ class RoomView extends GetView<RoomController> {
                     Get.to(() => const CameraPage());
                   }
                 },
-                child: const Text("📷 Mở Camera"),
+
+                // child: const Text('Mở Camera')
+                  child : ButtonTheme(child: Text("Mở camera"))
               ),
 
             ],

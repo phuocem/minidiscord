@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:minidiscord/app/data/models/ChatModel.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../data/models/ProfileModel.dart';
@@ -235,16 +236,11 @@ class MakeFriendController extends GetxController {
     }
   }
 
-  /// ✉️ Bắt đầu chat với bạn bè
-
-  void navigateDetailMes(String userId) async {
-    try {
-      await supabase.auth.signOut();
-      Get.offAllNamed('/detail-chat');
-      Get.snackbar("Chat", "Bắt đầu chat với $userId");
-
-    } catch (e) {
-      print('Error signing out: $e');
-    }
-  }
+void Naviga( ChatModel id)
+{
+  if(id == true ){
+  Get.offAllNamed('/detail-chat');}
+  else
+    Get.snackbar("sai", "sai");
+}  
 }

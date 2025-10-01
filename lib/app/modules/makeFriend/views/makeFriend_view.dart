@@ -213,8 +213,11 @@ class MakeFriendView extends StatelessWidget {
               .map((f) => _buildUserCard(
             f,
             IconButton(
-              icon: const Icon(Icons.message_outlined,color: Colors.blue),
-              onPressed: () =>{}
+              icon: const Icon(Icons.message_outlined, color: Colors.blue),
+              onPressed: () {
+                // Navigate to chat detail, pass friend id
+                Get.toNamed('/detail-chat', arguments: {'friendId': f.id});
+              },
             ),
           ))
               .toList(),
@@ -246,7 +249,6 @@ class MakeFriendView extends StatelessWidget {
         hintText: "Tìm kiếm bạn bè...",
         prefixIcon: const Icon(Icons.search),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.9),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
