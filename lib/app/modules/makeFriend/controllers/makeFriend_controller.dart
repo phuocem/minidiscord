@@ -28,16 +28,9 @@ class MakeFriendController extends GetxController {
 
   var isLoading = false.obs;
 
-  /// Danh sách user tìm thấy
   var searchResults = <ProfileModel>[].obs;
-
-  /// Danh sách lời mời kết bạn nhận được
   var friendRequests = <FriendRequestViewModel>[].obs;
-
-  /// Danh sách bạn bè
   var friends = <ProfileModel>[].obs;
-
-  /// Danh sách lời mời kết bạn đã gửi
   var sentRequests = <SentRequestViewModel>[].obs;
 
   @override
@@ -46,6 +39,50 @@ class MakeFriendController extends GetxController {
     loadFriendRequests();
     loadSentRequests();
     loadFriends();
+  }
+
+  /// Helper: kiểm tra 2 user đã là bạn chưa
+  Future<bool> _areFriends(String userId, String otherId) async {
+    try {
+      final resp = await supabase
+          .from('friends')
+          .select('id')
+          .eq('user_id', userId)
+          .eq('friend_id', otherId)
+          .limit(1);
+      return (resp is List && resp.isNotEmpty);
+    } catch (e) {
+      print('check friends error: $e');
+      return false;
+    }
+  }
+
+  /// Helper: kiểm tra có lời mời đang chờ giữa 2 user không (bất kỳ chiều)
+  Future<bool> _hasPendingRequestBetween(String aId, String bId) async {
+    try {
+      final resp1 = await supabase
+          .from('friend_requests')
+          .select('id')
+          .eq('sender_id', aId)
+          .eq('receiver_id', bId)
+          .eq('status', 'pending')
+          .limit(1);
+
+      if (resp1 is List && resp1.isNotEmpty) return true;
+
+      final resp2 = await supabase
+          .from('friend_requests')
+          .select('id')
+          .eq('sender_id', bId)
+          .eq('receiver_id', aId)
+          .eq('status', 'pending')
+          .limit(1);
+
+      return (resp2 is List && resp2.isNotEmpty);
+    } catch (e) {
+      print('check pending request error: $e');
+      return false;
+    }
   }
 
   /// 🔍 Tìm kiếm user theo username
@@ -71,26 +108,24 @@ class MakeFriendController extends GetxController {
     }
   }
 
-  /// ➕ Gửi lời mời kết bạn
+  /// ➕ Gửi lời mời kết bạn (đã thêm kiểm tra)
   Future<void> sendFriendRequest(String receiverId) async {
     final user = supabase.auth.currentUser;
     if (user == null) return;
 
-    try {
-      await supabase.from("friend_requests").insert({
-        'sender_id': user.id,
-        'receiver_id': receiverId,
-      });
-
-      Get.snackbar("Thành công", "Đã gửi lời mời kết bạn");
-      loadSentRequests();
-    } catch (e) {
-      Get.snackbar("Lỗi", "Không thể gửi lời mời kết bạn");
-      print(e);
+    // Không cho gửi trùng
+    final check = await supabase
+        .from("friend_requests")
+        .select()
+        .eq("sender_id", user.id)
+        .eq("receiver_id", receiverId)
+        .eq("status", "pending");
+    if (check.isNotEmpty) {
+      Get.snackbar("Thông báo", "Đã gửi lời mời rồi!");
+      return;
     }
   }
-
-  /// 📋 Lấy danh sách lời mời kết bạn mình nhận được
+    /// 📋 Lấy danh sách lời mời kết bạn mình nhận được
   Future<void> loadFriendRequests() async {
     final user = supabase.auth.currentUser;
     if (user == null) return;
@@ -127,7 +162,7 @@ class MakeFriendController extends GetxController {
     isLoading.value = false;
   }
 
-  /// ✅ Đồng ý kết bạn
+  /// ✅ Đồng ý kết bạn (tránh chèn trùng)
   Future<void> acceptFriendRequest(String requestId, String senderId) async {
     final user = supabase.auth.currentUser;
     if (user == null) return;
@@ -138,15 +173,21 @@ class MakeFriendController extends GetxController {
         'status': 'accepted',
       }).eq('id', requestId);
 
-      // Thêm vào bảng friends (2 chiều)
-      await supabase.from("friends").insert([
-        {'user_id': user.id, 'friend_id': senderId},
-        {'user_id': senderId, 'friend_id': user.id},
-      ]);
+      // Thêm vào bảng friends (2 chiều) nhưng kiểm tra trùng trước
+      final already1 = await _areFriends(user.id, senderId);
+      final already2 = await _areFriends(senderId, user.id);
+
+      final inserts = <Map<String, dynamic>>[];
+      if (!already1) inserts.add({'user_id': user.id, 'friend_id': senderId});
+      if (!already2) inserts.add({'user_id': senderId, 'friend_id': user.id});
+
+      if (inserts.isNotEmpty) {
+        await supabase.from("friends").insert(inserts);
+      }
 
       Get.snackbar("Thành công", "Đã chấp nhận lời mời kết bạn");
-      loadFriendRequests();
-      loadFriends();
+      await loadFriendRequests();
+      await loadFriends();
     } catch (e) {
       Get.snackbar("Lỗi", "Không thể chấp nhận lời mời");
       print(e);
@@ -161,7 +202,7 @@ class MakeFriendController extends GetxController {
       }).eq('id', requestId);
 
       Get.snackbar("Thành công", "Đã từ chối lời mời");
-      loadFriendRequests();
+      await loadFriendRequests();
     } catch (e) {
       Get.snackbar("Lỗi", "Không thể từ chối lời mời");
       print(e);
@@ -191,7 +232,6 @@ class MakeFriendController extends GetxController {
     }
     isLoading.value = false;
   }
-
 
   /// 📋 Lấy danh sách lời mời kết bạn đã gửi
   Future<void> loadSentRequests() async {
@@ -229,18 +269,47 @@ class MakeFriendController extends GetxController {
     try {
       await supabase.from('friend_requests').delete().eq('id', requestId);
       Get.snackbar("Thành công", "Đã hủy lời mời kết bạn");
-      loadSentRequests();
+      await loadSentRequests();
     } catch (e) {
       Get.snackbar("Lỗi", "Không thể hủy lời mời");
       print(e);
     }
   }
+  /// Kiểm tra trạng thái giữa currentUser và user khác
+  Future<String> getRelationStatus(String otherUserId) async {
+    final user = supabase.auth.currentUser;
+    if (user == null) return "none";
 
-void Naviga( ChatModel id)
-{
-  if(id == true ){
-  Get.offAllNamed('/detail-chat');}
-  else
-    Get.snackbar("sai", "sai");
-}  
+    // Đã là bạn chưa
+    if (await _areFriends(user.id, otherUserId)) {
+      return "friend";
+    }
+
+    // Có lời mời pending giữa 2 người không
+    if (await _hasPendingRequestBetween(user.id, otherUserId)) {
+      // Check chiều
+      final sent = await supabase
+          .from("friend_requests")
+          .select('id')
+          .eq("sender_id", user.id)
+          .eq("receiver_id", otherUserId)
+          .eq("status", "pending")
+          .maybeSingle();
+
+      if (sent != null) return "sent"; // mình gửi
+      return "received"; // họ gửi cho mình
+    }
+
+    return "none"; // chưa có gì
+  }
+
+  /// Sửa hàm Naviga: ChatModel không nên so sánh với bool
+  void Naviga(ChatModel chat) {
+    // ví dụ: nếu bạn muốn kiểm tra chat.id tồn tại thì:
+    if (chat.id != null && chat.id!.isNotEmpty) {
+      Get.offAllNamed('/detail-chat', arguments: chat);
+    } else {
+      Get.snackbar("Lỗi", "Chat không hợp lệ");
+    }
+  }
 }

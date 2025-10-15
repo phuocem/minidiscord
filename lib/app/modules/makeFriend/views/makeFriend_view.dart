@@ -89,16 +89,42 @@ class MakeFriendView extends StatelessWidget {
             }
             return Column(
               children: controller.searchResults
-                  .map((ProfileModel user) => _buildUserCard(
-                user,
-                ElevatedButton(
-                  onPressed: () =>
-                      controller.sendFriendRequest(user.id),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue.shade400,
-                  ),
-                  child: const Text("Kết bạn"),
-                ),
+                  .map((ProfileModel user) => FutureBuilder<String>(
+                future: controller.getRelationStatus(user.id),
+                builder: (context, snapshot) {
+                  final status = snapshot.data ?? "none";
+
+                  Widget actionButton;
+                  switch (status) {
+                    case "friend":
+                      actionButton = const Text(
+                        "Bạn bè",
+                        style: TextStyle(color: Colors.grey),
+                      );
+                      break;
+                    case "sent":
+                      actionButton = const Text(
+                        "Đã gửi",
+                        style: TextStyle(color: Colors.grey),
+                      );
+                      break;
+                    case "received":
+                      actionButton = ElevatedButton(
+                        onPressed: () {
+                          controller.acceptFriendRequest(user.id, user.id);
+                        },
+                        child: const Text("Xác nhận"),
+                      );
+                      break;
+                    default:
+                      actionButton = ElevatedButton(
+                        onPressed: () => controller.sendFriendRequest(user.id),
+                        child: const Text("Kết bạn"),
+                      );
+                  }
+
+                  return _buildUserCard(user, actionButton);
+                },
               ))
                   .toList(),
             );
